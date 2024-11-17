@@ -5,18 +5,7 @@
 
 #include "math.hpp"
 
-class Tube;
-
-class TubeObserver {
- public:
-  TubeObserver(Tube* tube) : tube_(tube) {}
-  virtual void NewFrame() = 0;
-  virtual void RegisterElectron(Vector<double>) = 0;
-  virtual ~TubeObserver() = default;
-
- protected:
-  Tube* tube_;
-};
+class TubeObserver;
 
 class Tube {
  public:
@@ -28,4 +17,15 @@ class Tube {
 
  protected:
   std::vector<TubeObserver*> observers_;
+};
+
+class TubeObserver {
+ public:
+  TubeObserver(Tube* tube) : tube_(tube) { tube->AddObserver(this); }
+  virtual void NewFrame() = 0;
+  virtual void RegisterElectron(Vector<double>) = 0;
+  virtual ~TubeObserver() = default;
+
+ protected:
+  Tube* tube_;
 };
