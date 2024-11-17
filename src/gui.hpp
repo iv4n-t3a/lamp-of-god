@@ -7,8 +7,6 @@ class Gui : TubeObserver {
   Gui(Tube* tube);
   void Run();
 
-  void NewFrame() override;
-  void RegisterElectron(Vector<double> pos) override;
-
+  void NewFrame(double delta_time) override;
  private:
 };
