@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cmath>
+
 template <typename T>
 struct Vector {
   T x;
@@ -30,4 +32,11 @@ struct Vector {
     y *= mult;
     return *this;
   }
+
+  T SqrDist(Vector<T> other) {
+    double distx = other.x - x;
+    double disty = other.y - y;
+    return distx * distx + disty * disty;
+  }
+  T Dist(Vector<T> other) { return std::sqrt(SqrDist(other)); }
 };
