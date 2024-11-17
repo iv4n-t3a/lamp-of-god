@@ -1,5 +1,7 @@
-#include "test.hpp"
+#include "gui.hpp"
 
 int main() {
-  HelloWorld();
+  // TODO: implement
+  Gui gui(nullptr);
+  gui.Run();
 }
