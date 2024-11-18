@@ -8,5 +8,6 @@ class Gui : TubeObserver {
   void Run();
 
   void NewFrame(double delta_time) override;
+
  private:
 };
