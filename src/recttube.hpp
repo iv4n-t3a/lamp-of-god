@@ -17,7 +17,9 @@ class RectangleTube : public Tube {
 
   size_t CountElectrons() const { return electrons_.size(); }
 
- private:
+  virtual ~RectangleTube() {}
+
+ protected:
   void NewFrameSetup(double delta_time) override;
 
   void SpawnNewElectrons(double delta_time);

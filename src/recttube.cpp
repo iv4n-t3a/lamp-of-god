@@ -1,6 +1,7 @@
 #include "recttube.hpp"
 
 #include <random>
+#include <tuple>
 
 #include "math.hpp"
 #include "phys.hpp"
@@ -50,6 +51,8 @@ void RectangleTube::SpawnNewElectrons(double delta_time) {
 }
 
 void RectangleTube::RemoveFinishedElectrons(double delta_time) {
+  std::ignore = delta_time;
+
   for (size_t i = 0; i < CountElectrons(); ++i) {
     if (electrons_[i].position.x >= width_ - catode_width_) {
       RemoveElectron(i);
