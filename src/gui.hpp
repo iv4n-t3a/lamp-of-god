@@ -1,12 +1,25 @@
 #pragma once
 
-#include "tube.hpp"
+#include <SFML/Graphics.hpp>
+#include <SFML/Graphics/RenderWindow.hpp>
+#include <string>
+#include <vector>
 
-class Gui : TubeObserver {
+#include "tube.hpp"
+#include "widget.hpp"
+
+class Gui {
  public:
-  Gui(Tube* tube);
+  Gui(Tube* tube, int fps, Vector<int> winsize, std::string winname);
+  ~Gui();
+
   void Run();
 
-  void NewFrame(double delta_time) override;
  private:
+  int fps_;
+
+  Tube* tube_;
+
+  std::vector<Widget*> widgets_;
+  sf::RenderWindow window_;
 };
