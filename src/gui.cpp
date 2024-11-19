@@ -9,8 +9,8 @@
 #include "tube.hpp"
 
 Gui::Gui(Tube *tube, int fps, Vector<int> winsize, std::string winname)
-    : tube_(tube),
-      fps_(fps),
+    : fps_(fps),
+      tube_(tube),
       window_(sf::VideoMode(winsize.x, winsize.y), winname) {
   auto *hitmap = new Hitmap(&window_, {0, 0}, winsize, tube);
   widgets_.push_back(hitmap);

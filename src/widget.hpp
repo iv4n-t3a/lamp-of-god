@@ -7,7 +7,7 @@
 class Widget {
  public:
   Widget(sf::RenderWindow* win, Vector<int> position, Vector<int> size)
-      : position_(position), size_(size), win_(win) {}
+      : win_(win), position_(position), size_(size) {}
 
   void UpdatePosition(Vector<int> position) { position_ = position; }
   void UpdateSize(Vector<int> size) { size_ = size; }
