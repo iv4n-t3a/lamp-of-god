@@ -1,2 +1,6 @@
 bin
 diff
+.idea
+.vscode
+resources
+cmake-build-debug
