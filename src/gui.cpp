@@ -5,15 +5,16 @@
 #include <chrono>
 #include <thread>
 
-#include "hitmap.hpp"
+#include "heatmap.hpp"
 #include "tube.hpp"
 
-Gui::Gui(Tube *tube, int fps, Vector<int> winsize, std::string winname)
+Gui::Gui(Tube *tube, int fps, Vector<int> winsize, std::string winname,
+         double scale)
     : fps_(fps),
       tube_(tube),
       window_(sf::VideoMode(winsize.x, winsize.y), winname) {
-  auto *hitmap = new Hitmap(&window_, {0, 0}, winsize, tube);
-  widgets_.push_back(hitmap);
+  auto *heatmap = new HeatMap(&window_, {0, 0}, winsize, tube, scale);
+  widgets_.push_back(heatmap);
 }
 
 Gui::~Gui() {

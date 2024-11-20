@@ -10,7 +10,8 @@
 
 class Gui {
  public:
-  Gui(Tube* tube, int fps, Vector<int> winsize, std::string winname);
+  Gui(Tube* tube, int fps, Vector<int> winsize, std::string winname,
+      double scale);
   ~Gui();
 
   void Run();

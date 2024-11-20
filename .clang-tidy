@@ -47,6 +47,10 @@ CheckOptions:
     value: 'lower_case'
   - key: readability-identifier-length.IgnoredVariableNames
     value: '[xy]'
+  - key: readability-identifier-length.IgnoredLoopCounterNames
+    value: '[xy]'
+  - key: readability-identifier-length.IgnoredParameterNames
+    value: '[xy]'
   - key: readability-magic-numbers.IgnoredIntegerValues
     value: '1;2;3;4'
   - key: readability-simplify-boolean-expr.ChainedConditionalReturn
