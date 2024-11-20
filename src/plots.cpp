@@ -1,6 +1,7 @@
 #include "plots.hpp"
 
 #include <fstream>
+#include <iostream>
 
 FieldObserver::FieldObserver(Tube *tube, std::vector<Vector<double>> positions, std::string file_path)
     : TubeObserver(tube),
