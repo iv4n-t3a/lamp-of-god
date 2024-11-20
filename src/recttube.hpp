@@ -15,7 +15,7 @@ class RectangleTube : public Tube {
   Vector<double> GetElectricityField(Vector<double> pos) override;
   bool IsInsideTube(Vector<double> pos) override;
 
-  size_t CountElectrons() const { return electrons_.size(); }
+  inline size_t CountElectrons() const { return electrons_.size(); }
 
   virtual ~RectangleTube() {}
 
