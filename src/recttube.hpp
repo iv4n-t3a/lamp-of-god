@@ -1,39 +1,40 @@
 #pragma once
 
 #include "math.hpp"
+#include "phys.hpp"
 #include "tube.hpp"
 
 struct Electron {
-  Vector<double> position;
-  Vector<double> speed;
+  Vector<dist_t> position;
+  Vector<vel_t> speed;
 };
 
 class RectangleTube : public Tube {
  public:
-  RectangleTube(double height, double width, double current, double field, double anode_width,
-                double catode_width);
-  Vector<double> GetElectricityField(Vector<double> pos) override;
-  bool IsInsideTube(Vector<double> pos) override;
+  RectangleTube(dist_t height, dist_t width, dist_t anode_width,
+                dist_t catode_width, current_t current, field_t field);
+  Vector<field_t> GetElectricityField(Vector<dist_t> pos) override;
+  bool IsInsideTube(Vector<dist_t> pos) override;
 
   size_t CountElectrons() const { return electrons_.size(); }
 
   virtual ~RectangleTube() {}
 
  protected:
-  void NewFrameSetup(double delta_time) override;
+  void NewFrameSetup(delay_t delta_time) override;
 
-  void SpawnNewElectrons(double delta_time);
-  void RemoveFinishedElectrons(double delta_time);
-  void AplyElectrycForce(double delta_time);
+  void SpawnNewElectrons(delay_t delta_time);
+  void RemoveFinishedElectrons(delay_t delta_time);
+  void AplyElectrycForce(delay_t delta_time);
 
   void RemoveElectron(size_t idx);
 
-  double height_;
-  double width_;
-  double current_;
-  double field_;
-  double anode_width_;
-  double catode_width_;
+  dist_t height_;
+  dist_t width_;
+  dist_t anode_width_;
+  dist_t catode_width_;
+  current_t current_;
+  field_t field_;
 
   std::vector<Electron> electrons_;
 };

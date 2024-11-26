@@ -6,18 +6,18 @@
 #include "math.hpp"
 #include "phys.hpp"
 
-RectangleTube::RectangleTube(double height, double width, double current,
-                             double field, double anode_width,
-                             double catode_width)
+RectangleTube::RectangleTube(dist_t height, dist_t width, dist_t anode_width,
+                             dist_t catode_width, current_t current,
+                             field_t field)
     : height_(height),
       width_(width),
-      current_(current),
-      field_(field),
       anode_width_(anode_width),
-      catode_width_(catode_width) {}
+      catode_width_(catode_width),
+      current_(current),
+      field_(field) {}
 
-Vector<double> RectangleTube::GetElectricityField(Vector<double> pos) {
-  Vector<double> field = {field_, 0};
+Vector<field_t> RectangleTube::GetElectricityField(Vector<dist_t> pos) {
+  Vector<field_t> field = {field_, 0};
 
   for (Electron elc : electrons_) {
     field += ElectricField(pos, elc.position);
@@ -26,17 +26,17 @@ Vector<double> RectangleTube::GetElectricityField(Vector<double> pos) {
   return field;
 }
 
-bool RectangleTube::IsInsideTube(Vector<double> pos) {
+bool RectangleTube::IsInsideTube(Vector<dist_t> pos) {
   return pos.x < width_ and pos.x >= 0 and pos.y < height_ and pos.y >= 0;
 }
 
-void RectangleTube::NewFrameSetup(double delta_time) {
+void RectangleTube::NewFrameSetup(delay_t delta_time) {
   RemoveFinishedElectrons(delta_time);
   SpawnNewElectrons(delta_time);
   AplyElectrycForce(delta_time);
 }
 
-void RectangleTube::SpawnNewElectrons(double delta_time) {
+void RectangleTube::SpawnNewElectrons(delay_t delta_time) {
   static std::mt19937 gen;
   static std::uniform_real_distribution<> dis_x(0, anode_width_);
   static std::uniform_real_distribution<> dis_y(0, height_);
@@ -44,15 +44,15 @@ void RectangleTube::SpawnNewElectrons(double delta_time) {
   const size_t kNewElectrons = current_ * delta_time / kElementaryCharge;
 
   for (size_t i = 0; i < kNewElectrons; ++i) {
-    double x = dis_x(gen);
-    double y = dis_y(gen);
-    Vector<double> position = {x, y};
-    Vector<double> speed = {0, 0};
-    electrons_.emplace_back(position, speed);
+    dist_t x = dis_x(gen);
+    dist_t y = dis_y(gen);
+    Vector<dist_t> position = {x, y};
+    Vector<vel_t> velocity = {0, 0};
+    electrons_.emplace_back(position, velocity);
   }
 }
 
-void RectangleTube::RemoveFinishedElectrons(double delta_time) {
+void RectangleTube::RemoveFinishedElectrons(delay_t delta_time) {
   std::ignore = delta_time;
 
   for (size_t i = 0; i < CountElectrons(); ++i) {
@@ -62,8 +62,8 @@ void RectangleTube::RemoveFinishedElectrons(double delta_time) {
   }
 }
 
-void RectangleTube::AplyElectrycForce(double delta_time) {
-  static std::vector<Vector<double>> forces;
+void RectangleTube::AplyElectrycForce(delay_t delta_time) {
+  static std::vector<Vector<force_t>> forces;
 
   forces.resize(CountElectrons());
 
@@ -80,7 +80,7 @@ void RectangleTube::AplyElectrycForce(double delta_time) {
   }
 
   for (size_t i = 0; i < CountElectrons(); ++i) {
-    Vector<double> acceleration = forces[i] / kElectronMass;
+    Vector<accel_t> acceleration = forces[i] / kElectronMass;
     electrons_[i].speed += acceleration * delta_time;
     electrons_[i].position += electrons_[i].speed * delta_time +
                               acceleration * delta_time * delta_time / 2;

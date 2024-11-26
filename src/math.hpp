@@ -42,7 +42,7 @@ struct Vector {
   T SqrLen() const { return x * x + y * y; }
   T Len() const { return std::sqrt(SqrLen()); }
 
-  Vector<double>& Normalize() {
+  Vector<T>& Normalize() {
     T len = Len();
     x /= len;
     y /= len;
@@ -50,12 +50,12 @@ struct Vector {
   }
   Vector<T> Normalized() {
     T len = Len();
-    return Vector<double>(x / len, y / len);
+    return Vector<T>(x / len, y / len);
   }
 
   T SqrDist(Vector<T> other) const {
-    double distx = other.x - x;
-    double disty = other.y - y;
+    T distx = other.x - x;
+    T disty = other.y - y;
     return distx * distx + disty * disty;
   }
   T Dist(Vector<T> other) const { return std::sqrt(SqrDist(other)); }
