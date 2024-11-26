@@ -27,6 +27,7 @@ Vector<field_t> RectangleTube::GetElectricityField(Vector<dist_t> pos) {
 }
 
 Vector<field_t> RectangleTube::GetPotential(Vector<dist_t> pos) {
+  std::ignore = pos;
   return {0, 0};
 }
 
