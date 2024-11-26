@@ -6,7 +6,6 @@ def read_file_content():
     global FILE_PATH
     with open(FILE_PATH, 'r') as f:
         data = list(map(lambda l: list(map(float, l.split())), f.readlines()))
-    print(data)
     return data
 
 def build_graph():
