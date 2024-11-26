@@ -14,6 +14,8 @@ class Tube {
   void NewFrame(delay_t delta_time);
 
   virtual Vector<field_t> GetElectricityField(Vector<dist_t>) = 0;
+  virtual Vector<potential_t> GetPotential(Vector<dist_t>) = 0;
+
   virtual bool IsInsideTube(Vector<dist_t>) = 0;
   virtual ~Tube() = default;
 

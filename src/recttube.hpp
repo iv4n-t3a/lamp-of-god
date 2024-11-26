@@ -13,7 +13,11 @@ class RectangleTube : public Tube {
  public:
   RectangleTube(dist_t height, dist_t width, dist_t anode_width,
                 dist_t catode_width, current_t current, field_t field);
+
   Vector<field_t> GetElectricityField(Vector<dist_t> pos) override;
+
+  Vector<potential_t> GetPotential(Vector<dist_t> pos) override;
+
   bool IsInsideTube(Vector<dist_t> pos) override;
 
   size_t CountElectrons() const { return electrons_.size(); }

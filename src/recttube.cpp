@@ -26,6 +26,10 @@ Vector<field_t> RectangleTube::GetElectricityField(Vector<dist_t> pos) {
   return field;
 }
 
+Vector<field_t> RectangleTube::GetPotential(Vector<dist_t> pos) {
+  return {0, 0};
+}
+
 bool RectangleTube::IsInsideTube(Vector<dist_t> pos) {
   return pos.x < width_ and pos.x >= 0 and pos.y < height_ and pos.y >= 0;
 }

@@ -12,6 +12,7 @@ using field_t = default_physical_t;
 using accel_t = default_physical_t;
 using current_t = default_physical_t;
 using delay_t = default_physical_t;
+using potential_t = default_physical_t;
 
 const charge_t kElementaryCharge = 1.6E-19;
 const mass_t kElectronMass = 9.1E-31;
