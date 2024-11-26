@@ -102,3 +102,7 @@ void RectangleTube::RemoveElectron(size_t idx) {
   electrons_[idx] = electrons_.back();
   electrons_.pop_back();
 }
+
+std::pair<dist_t, dist_t> RectangleTube::GetDimensions() {
+  return std::make_pair(width_, height_);
+}

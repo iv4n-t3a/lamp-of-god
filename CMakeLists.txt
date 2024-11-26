@@ -18,7 +18,8 @@ FetchContent_MakeAvailable(SFML)
 file(GLOB SOURCES src/*.cpp)
 file(GLOB HEADERS src/*.hpp)
 
-add_executable(main ${SOURCES})
+add_executable(main ${SOURCES}
+        src/observers.cpp)
 
 target_link_libraries(main PRIVATE sfml-graphics)
 target_compile_features(main PRIVATE cxx_std_20)
