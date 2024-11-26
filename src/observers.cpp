@@ -4,11 +4,11 @@
 #include <fstream>
 
 PotentialObserver::PotentialObserver(Tube* tube,
-  const std::string& file_path,
+  const std::string& directory_path,
   const std::pair<int, int>& resolution,
   std::vector<delay_t> offsets)
     : TubeObserver(tube),
-      file_path_(file_path),
+      directory_path_(directory_path),
       offsets_(offsets),
       width_(resolution.first),
       height_(resolution.second)
@@ -19,7 +19,7 @@ PotentialObserver::PotentialObserver(Tube* tube,
 void PotentialObserver::NewFrame(delay_t delta_time) {
   time_passed_ += delta_time;
   if (offset_index_ < std::size(offsets_) and time_passed_ >= offsets_[offset_index_]) {
-    std::ofstream output_file(file_path_ + "/" + std::to_string(time_passed_) + ".txt");
+    std::ofstream output_file(directory_path_ + '/' + std::to_string(time_passed_) + ".txt");
     std::vector<std::vector<Vector<potential_t>>> potentials;
 
     auto dimensions = tube_->GetDimensions();
@@ -40,7 +40,7 @@ void PotentialObserver::NewFrame(delay_t delta_time) {
 
     for (auto line : potentials) {
       for (auto value : line) {
-        output_file << value.Len() << " ";
+        output_file << value.Len() << ' ';
       }
       output_file << '\n';
     }
