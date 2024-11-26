@@ -1,2 +1,5 @@
 bin
 diff
+build
+.env
+data
