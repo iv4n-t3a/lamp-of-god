@@ -7,10 +7,12 @@
 #include "phys.hpp"
 
 RectangleTube::RectangleTube(double height, double width, double current,
-                             double anode_width, double catode_width)
+                             double field, double anode_width,
+                             double catode_width)
     : height_(height),
       width_(width),
       current_(current),
+      field_(field),
       anode_width_(anode_width),
       catode_width_(catode_width) {}
 
@@ -83,8 +85,10 @@ void RectangleTube::AplyElectrycForce(double delta_time) {
     electrons_[i].position += electrons_[i].speed * delta_time +
                               acceleration * delta_time * delta_time / 2;
 
-    if (IsInsideTube(electrons_[i].position)) {
-      RemoveElectron(i);
+    if (electrons_[i].position.y > height_) {
+      electrons_[i].position.y = height_;
+    } else if (electrons_[i].position.y < 0) {
+      electrons_[i].position.y = 0;
     }
   }
 }

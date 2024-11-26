@@ -10,12 +10,12 @@ struct Electron {
 
 class RectangleTube : public Tube {
  public:
-  RectangleTube(double height, double width, double current, double anode_width,
+  RectangleTube(double height, double width, double current, double field, double anode_width,
                 double catode_width);
   Vector<double> GetElectricityField(Vector<double> pos) override;
   bool IsInsideTube(Vector<double> pos) override;
 
-  inline size_t CountElectrons() const { return electrons_.size(); }
+  size_t CountElectrons() const { return electrons_.size(); }
 
   virtual ~RectangleTube() {}
 
