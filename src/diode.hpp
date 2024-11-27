@@ -11,10 +11,11 @@ struct Charge {
 
 class Diode : public Tube {
  public:
-  Diode(dist_t width, dist_t height, dist_t cathode_width, dist_t anode_width,
-        temp_t temp, voltage_t voltage, Conductor conductor,
-        dist_t potential_grid_gap, physical_t electrons_per_charge);
+  Diode(dist_t width, dist_t height, dist_t cathode_area, temp_t temp,
+        Conductor conductor, dist_t potential_grid_gap,
+        physical_t electrons_per_charge);
 
+  current_t GetCurrent() const override { return current_; }
   Vector<potential_t> GetPotential(Vector<dist_t> pos) const override;
 
   size_t CountCharges() const { return charges_.size(); }
@@ -29,16 +30,16 @@ class Diode : public Tube {
   void ApplyElectricForceToCharge(delay_t delta_time, size_t idx);
 
   bool IsInsideTube(size_t idx);
+  bool IsOnAnode(size_t idx);
   void RemoveCharge(size_t idx);
 
-  dist_t cathode_width_;
-  dist_t anode_width_;
-  potential_t cathode_potential_;
+  dist_t cathode_area_;
   Conductor cond_;
 
   dist_t potential_grid_gap_;
   physical_t electrons_per_charge_ = 1;
 
+  current_t current_ = 0;
   physical_t new_charges_ = 0;
   std::vector<Charge> charges_;
 };
