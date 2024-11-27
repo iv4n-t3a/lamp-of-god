@@ -8,7 +8,8 @@
 class PotentialObserver : public TubeObserver {
  public:
   explicit PotentialObserver(Tube* tube, const std::string& directory_path,
-                             const std::pair<int, int>& resolution, std::vector<delay_t> offsets);
+                             const std::pair<int, int>& resolution,
+                             std::vector<delay_t> offsets);
 
   void NewFrame(delay_t delta_time) override;
 
@@ -22,15 +23,15 @@ class PotentialObserver : public TubeObserver {
 };
 
 class AveragePotentialObserver : public TubeObserver {
-public:
+ public:
   explicit AveragePotentialObserver(Tube* tube, const std::string& file_path,
-                             const std::pair<int, int>& resolution);
+                                    const std::pair<int, int>& resolution);
 
   void NewFrame(delay_t delta_time) override;
 
   ~AveragePotentialObserver() override;
 
-protected:
+ protected:
   const std::string& file_path_;
   int iterations_count_ = 0;
   int width_;
