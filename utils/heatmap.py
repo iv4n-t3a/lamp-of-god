@@ -9,15 +9,15 @@ def read_file_content():
         data = list(map(lambda l: list(map(float, l.split())), f.readlines()))
     return data
 
-def build_graph():
+def build_plot():
     data = read_file_content()
     plt.imshow(data, cmap='coolwarm', interpolation='nearest')
-    plt.colorbar(label='Потенциал')
-    plt.title('Потенциал')
+    plt.colorbar(label='Potential')
+    plt.title('Potential')
     plt.xlabel('X')
     plt.ylabel('Y')
 
     plt.show()
 
 if __name__ == "__main__":
-    build_graph()
+    build_plot()

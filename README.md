@@ -6,8 +6,13 @@ physics vacum tube simulation
 
 ## Pictures
 
-![cvc](media/cvc.jpg)
+![cvc](media/cvc.png)
+
+Current–voltage characteristic
+
 ![potentials](media/potentials.jpg)
+
+Potentials heatmap characteristic
 
 ## How to run
 
