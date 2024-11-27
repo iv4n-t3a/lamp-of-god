@@ -2,7 +2,6 @@
 
 #include <cassert>
 #include <cmath>
-#include <iostream>
 #include <random>
 #include <tuple>
 
@@ -21,17 +20,8 @@ Diode::Diode(dist_t width, dist_t height, dist_t catode_width,
       potential_grid_gap_(potential_grid_gap),
       electrons_per_charge_(electrons_per_charge) {}
 
-Vector<field_t> Diode::GetElectricityField(Vector<dist_t> pos) const {
-  std::ignore = pos;
-
-  if (charges_.size() < 100) {
-    return {0, 1};
-  }
-
-  return charges_[100].position;
-}
-
 Vector<field_t> Diode::GetPotential(Vector<dist_t> pos) const {
+  // TODO implement with poison
   std::ignore = pos;
   return {0, 0};
 }
@@ -47,25 +37,13 @@ void Diode::SpawnNewCharges(delay_t delta_time) {
   static std::uniform_real_distribution<> dis_x(0, catode_width_);
   static std::uniform_real_distribution<> dis_y(0, height_);
 
-  const size_t kNewCharges =
+  static physical_t new_charges = 0;
+
+  new_charges +=
       CountNewCharge(temp_, cond_, delta_time, catode_width_ * height_) /
       kElementaryCharge / electrons_per_charge_;
 
-  std::cout << "-----" << std::endl;
-  std::cout << (CountNewCharge(temp_, cond_, delta_time,
-                               catode_width_ * height_))
-            << std::endl;
-  std::cout << (CountNewCharge(temp_, cond_, delta_time,
-                               catode_width_ * height_) /
-                kElementaryCharge / electrons_per_charge_)
-            << std::endl;
-  std::cout << (size_t)(CountNewCharge(temp_, cond_, delta_time,
-                                       catode_width_ * height_) /
-                        kElementaryCharge / electrons_per_charge_)
-            << std::endl;
-  std::cout << "+++++" << std::endl;
-
-  for (size_t i = 0; i < kNewCharges; ++i) {
+  for (size_t i = 0; i < new_charges; ++i) {
     dist_t x = dis_x(gen);
     dist_t y = dis_y(gen);
     Vector<dist_t> position = {x, y};
@@ -96,28 +74,14 @@ void Diode::AplyElectrycForce(delay_t delta_time) {
 void Diode::AplyElectrycForceToCharge(delay_t delta_time, size_t idx) {
   std::ignore = delta_time;
 
-  const mass_t kChargeMass = electrons_per_charge_ * kElectronMass;
-  const charge_t kCharge = electrons_per_charge_ * kElementaryCharge;
+  const physical_t kCharge = electrons_per_charge_ * kElementaryCharge;
+  const physical_t kChargeMass = electrons_per_charge_ * kElectronMass;
 
-  size_t segments = height_ / potential_grid_gap_;
-  voltage_t segment_potential_value = catode_potential_ / segments;
-
-  Vector<potential_t> potential_delta =
-      CountElectronsPotential(charges_[idx].velocity);
-
-  dist_t x = 0;
-  for (dist_t y = 0; y < height_; y += potential_grid_gap_) {
-    auto pos = charges_[idx].position;
-    Vector<potential_t> segment_potential =
-        (pos - Vector<dist_t>({x, y})).Normalized() * segment_potential_value;
-    potential_delta += CountPotential(pos, {x, y}, kCharge) - segment_potential;
-  }
-
-  Vector<work_t> energy_delta = potential_delta * kCharge;
-  Vector<vel_t> velocity_delta_sqr = energy_delta * 2 / kChargeMass;
-  Vector<vel_t> velocity_delta =
-      velocity_delta_sqr / std::pow(velocity_delta_sqr.SqrLen(), 1. / 4);
-  charges_[idx].velocity += velocity_delta;
+  Vector<dist_t> pos = charges_[idx].position;
+  Vector<work_t> energy = GetPotential(pos) * kCharge;
+  Vector<vel_t> velocity_sqr = energy * 2 / kChargeMass;
+  charges_[idx].velocity =
+      velocity_sqr.Normalized() * pow(velocity_sqr.SqrLen(), 1. / 2);
 }
 
 bool Diode::IsInsideTube(size_t idx) {
@@ -127,9 +91,6 @@ bool Diode::IsInsideTube(size_t idx) {
 }
 
 void Diode::RemoveCharge(size_t idx) {
-  if (idx == 100) {
-    std::cout << "Deleting 100" << std::endl;
-  }
   charges_[idx] = charges_.back();
   charges_.pop_back();
 }

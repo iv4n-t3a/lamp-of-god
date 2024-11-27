@@ -1,7 +1,6 @@
 #pragma once
 
 #include <cmath>
-#include <iostream>
 
 #include "math.hpp"
 
@@ -33,7 +32,7 @@ const physical_t kColoumbConstant = 8.99E9;
 const physical_t kBoltzmanConstant = 1.38E-23;
 const physical_t kVacuumPermutivity = 8.85E-12;
 
-const Conductor kWolfram = {5.4 * kElementaryCharge, 60E4};
+const Conductor kTungsten = {5.4 * kElementaryCharge, 60E4};
 
 inline Vector<force_t> ElectricForce(Vector<dist_t> el1, Vector<dist_t> el2) {
   force_t val = kColoumbConstant * kElementaryCharge * kElementaryCharge /

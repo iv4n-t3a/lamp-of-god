@@ -7,10 +7,10 @@ const dist_t kWidth = 0.03;
 const dist_t kHeight = 0.01;
 const dist_t kAnodeWidth = kWidth / 100;
 const dist_t kCatodeWidth = kHeight / 100;
-const current_t kVoltage = 9;
-const temp_t kTemp = 2000;
+const current_t kVoltage = 100;
+const temp_t kTemp = 2200;
 
-const delay_t kIterations = 100000;
+const delay_t kIterations = 10000;
 const delay_t kDeltaTime = 1e-7;
 
 const physical_t kElectronPerCharge = 10000;
@@ -19,16 +19,15 @@ const size_t kCatodeSegments = 1000;
 const dist_t kPotentialGridGap = kHeight / kCatodeSegments;
 
 int main() {
-  std::cout << CurrentDensity(kTemp, kWolfram) << std::endl;;
+  std::cout << CurrentDensity(kTemp, kTungsten) << std::endl;
 
   Diode tube(kWidth, kHeight, kAnodeWidth, kCatodeWidth, kTemp, kVoltage,
-             kWolfram, kPotentialGridGap, kElectronPerCharge);
+             kTungsten, kPotentialGridGap, kElectronPerCharge);
 
   for (size_t i = 0; i < kIterations; ++i) {
-    std::cout <<
-      tube.GetElectricityField({0, kHeight / 2}).x << ' ' <<
-      tube.GetElectricityField({0, kHeight / 2}).y << ' ' <<
-      tube.CountCharges() << '\n';
     tube.NewFrame(kDeltaTime);
+    std::cout << tube.GetPotential({0, kHeight / 2}).x << ' '
+              << tube.GetPotential({0, kHeight / 2}).y << ' '
+              << tube.CountCharges() << '\n';
   }
 }
