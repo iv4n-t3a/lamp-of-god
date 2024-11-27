@@ -12,8 +12,8 @@ struct Charge {
 class Diode : public Tube {
  public:
   Diode(dist_t width, dist_t height, dist_t cathode_area, temp_t temp,
-        Conductor conductor, dist_t potential_grid_gap,
-        physical_t electrons_per_charge);
+        potential_t cathode_potential, Conductor conductor,
+        dist_t potential_grid_gap, physical_t electrons_per_charge);
 
   current_t GetCurrent() const override { return current_; }
   potential_t GetPotential(Vector<dist_t> pos) const override;

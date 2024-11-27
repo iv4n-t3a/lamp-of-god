@@ -88,7 +88,7 @@ struct Vector {
 template <typename T>
 void SolvePoisson(std::vector<std::vector<T>>& potential_matrix,
                   const std::vector<std::vector<bool>>& boundary_conditions,
-                  T tolerance = 3e-5, size_t iterations_limit = 10e6) {
+                  T tolerance = 3e-6, size_t iterations_limit = 10e6) {
   std::vector<std::vector<T>> new_potential_matrix = potential_matrix;
   for (size_t it = 0; it < iterations_limit; ++it) {
     std::swap(new_potential_matrix, potential_matrix);
