@@ -19,12 +19,18 @@ const size_t kCatodeSegments = 1000;
 const dist_t kPotentialGridGap = kHeight / kCatodeSegments;
 
 int main() {
-  std::cout << CurrentDensity(kTemp, kTungsten) << std::endl;
+  std::cout << "Solving Poisson..." << std::endl;
 
   Diode tube(kWidth, kHeight, kAnodeWidth, kCatodeWidth, kTemp, kVoltage,
              kTungsten, kPotentialGridGap, kElectronPerCharge);
 
+  std::cout << "OK" << std::endl;
+
+  std::cout << "Running simulation..." << std::endl;
+
   for (size_t i = 0; i < kIterations; ++i) {
     tube.NewFrame(kDeltaTime);
   }
+
+  std::cout << "OK" << std::endl;
 }

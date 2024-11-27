@@ -1,5 +1,6 @@
 #pragma once
 
+#include <algorithm>
 #include <cassert>
 #include <cmath>
 #include <cstdlib>
@@ -87,32 +88,32 @@ struct Vector {
 template <typename T>
 void SolvePoisson(std::vector<std::vector<T>>& potential_matrix,
                   const std::vector<std::vector<bool>>& boundary_conditions,
-                  T tolerance = 1e-6) {
+                  T tolerance = 3e-5, size_t iterations_limit = 10e6) {
   std::vector<std::vector<T>> new_potential_matrix = potential_matrix;
-  while (true) {
-    new_potential_matrix = potential_matrix;
+  for (size_t it = 0; it < iterations_limit; ++it) {
+    std::swap(new_potential_matrix, potential_matrix);
     for (size_t i = 1; i < new_potential_matrix.size() - 1; i++) {
       for (size_t j = 1; j < new_potential_matrix[i].size() - 1; j++) {
         if (!boundary_conditions[i][j]) {
           new_potential_matrix[i][j] =
               (potential_matrix[i - 1][j] + potential_matrix[i + 1][j] +
-               potential_matrix[i][j - 1] + potential_matrix[i][j - 1]) /
+               potential_matrix[i][j - 1] + potential_matrix[i][j + 1]) /
               4;
         }
       }
     }
 
-    T max_difference = 0;
+    T max_difference = T();
     for (size_t i = 1; i < new_potential_matrix.size() - 1; i++) {
       for (size_t j = 1; j < new_potential_matrix[i].size() - 1; j++) {
         max_difference = std::max(
             max_difference,
-            std::abs(potential_matrix[i][j], new_potential_matrix[i][j]));
+            std::abs(potential_matrix[i][j] - new_potential_matrix[i][j]));
       }
     }
 
     if (max_difference < tolerance) {
-      potential_matrix = new_potential_matrix;
+      std::swap(new_potential_matrix, potential_matrix);
       return;
     }
   }
