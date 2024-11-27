@@ -60,7 +60,7 @@ AveragePotentialObserver::AveragePotentialObserver(Tube* tube,
   for (int i = 0; i < height_; i++) {
     potentials_.push_back(std::vector<potential_t>());
     for (int j = 0; j < width_; j++) {
-      potentials_.back().emplace_back(0, 0);
+      potentials_.back().emplace_back(0);
     }
   }
 }
