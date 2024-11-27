@@ -58,7 +58,7 @@ AveragePotentialObserver::AveragePotentialObserver(
     Tube* tube, const std::string& file_path,
     const std::pair<int, int>& resolution)
     : TubeObserver(tube),
-      file_path_(file_path),
+      kFilePath(file_path),
       width_(resolution.first),
       height_(resolution.second) {
   for (int i = 0; i < height_; i++) {
@@ -92,7 +92,9 @@ void AveragePotentialObserver::NewFrame(delay_t delta_time) {
 }
 
 AveragePotentialObserver::~AveragePotentialObserver() {
-  std::ofstream output_file(file_path_);
+  std::cout << kFilePath << std::endl;
+  std::ofstream output_file(kFilePath);
+  // std::ofstream output_file("/home/ivan/codes/lamp-of-god/data/file.txt");
   for (size_t i = 0; i < potentials_.size(); i++) {
     for (size_t j = 0; j < potentials_[i].size(); j++) {
       output_file << potentials_[i][j] / iterations_count_ << ' ';

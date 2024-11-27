@@ -33,7 +33,7 @@ int main() {
 
   std::cout << "OK" << std::endl;
 
-  AveragePotentialObserver average_potential_observer(&tube, "data",
+  AveragePotentialObserver average_potential_observer(&tube, "/home/ivan/codes/lamp-of-god/data/file.txt",
                                                       kHeatmapResolution);
 
   std::cout << "Running simulation..." << std::endl;

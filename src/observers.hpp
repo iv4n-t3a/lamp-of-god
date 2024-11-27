@@ -32,7 +32,7 @@ class AveragePotentialObserver : public TubeObserver {
   ~AveragePotentialObserver() override;
 
  protected:
-  const std::string& file_path_;
+  const std::string kFilePath;
   int iterations_count_ = 0;
   int width_;
   int height_;
