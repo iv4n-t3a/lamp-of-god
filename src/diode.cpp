@@ -37,9 +37,9 @@ Vector<field_t> Diode::GetPotential(Vector<dist_t> pos) const {
 }
 
 void Diode::NewFrameSetup(delay_t delta_time) {
-  RemoveFinishedCharges(delta_time);
   SpawnNewCharges(delta_time);
   AplyElectrycForce(delta_time);
+  RemoveFinishedCharges(delta_time);
 }
 
 void Diode::SpawnNewCharges(delay_t delta_time) {
@@ -52,9 +52,17 @@ void Diode::SpawnNewCharges(delay_t delta_time) {
       kElementaryCharge / electrons_per_charge_;
 
   std::cout << "-----" << std::endl;
-  std::cout << (CountNewCharge(temp_, cond_, delta_time, catode_width_ * height_)) << std::endl;
-  std::cout << (CountNewCharge(temp_, cond_, delta_time, catode_width_ * height_) / kElementaryCharge / electrons_per_charge_) << std::endl;
-  std::cout << (size_t)(CountNewCharge(temp_, cond_, delta_time, catode_width_ * height_) / kElementaryCharge / electrons_per_charge_) << std::endl;
+  std::cout << (CountNewCharge(temp_, cond_, delta_time,
+                               catode_width_ * height_))
+            << std::endl;
+  std::cout << (CountNewCharge(temp_, cond_, delta_time,
+                               catode_width_ * height_) /
+                kElementaryCharge / electrons_per_charge_)
+            << std::endl;
+  std::cout << (size_t)(CountNewCharge(temp_, cond_, delta_time,
+                                       catode_width_ * height_) /
+                        kElementaryCharge / electrons_per_charge_)
+            << std::endl;
   std::cout << "+++++" << std::endl;
 
   for (size_t i = 0; i < kNewCharges; ++i) {
@@ -95,7 +103,7 @@ void Diode::AplyElectrycForceToCharge(delay_t delta_time, size_t idx) {
   voltage_t segment_potential_value = catode_potential_ / segments;
 
   Vector<potential_t> potential_delta =
-      CountElectronsPotential(charges_[idx].position);
+      CountElectronsPotential(charges_[idx].velocity);
 
   dist_t x = 0;
   for (dist_t y = 0; y < height_; y += potential_grid_gap_) {
@@ -114,10 +122,14 @@ void Diode::AplyElectrycForceToCharge(delay_t delta_time, size_t idx) {
 
 bool Diode::IsInsideTube(size_t idx) {
   auto pos = charges_[idx].position;
-  return pos.x >= 0 and pos.x <= width_ and pos.y >= 0 and pos.y <= height_;
+  return pos.x >= 0 and pos.x <= width_ and pos.y >= 0 and pos.y <= height_ and
+         not std::isnan(pos.x) and not std::isnan(pos.y);
 }
 
 void Diode::RemoveCharge(size_t idx) {
+  if (idx == 100) {
+    std::cout << "Deleting 100" << std::endl;
+  }
   charges_[idx] = charges_.back();
   charges_.pop_back();
 }

@@ -1,11 +1,19 @@
 #pragma once
 
+#include <cassert>
 #include <cmath>
+#include <cstdlib>
 
 template <typename T>
 struct Vector {
   T x = T();
   T y = T();
+
+  Vector() = default;
+  Vector(const Vector&) = default;
+  Vector(T vec_x, T vec_y) : x(vec_x), y(vec_y) {
+    assert(not std::isnan(vec_x) and not std::isnan(vec_y));
+  }
 
   Vector operator-() const { return Vector(-x, -y); }
 
@@ -44,12 +52,22 @@ struct Vector {
 
   Vector<T>& Normalize() {
     T len = Len();
+
+    if (len == 0) {
+      return {0, 0};
+    }
+
     x /= len;
     y /= len;
     return *this;
   }
   Vector<T> Normalized() {
     T len = Len();
+
+    if (len == 0) {
+      return {0, 0};
+    }
+
     return Vector<T>(x / len, y / len);
   }
 

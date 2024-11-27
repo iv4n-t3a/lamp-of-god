@@ -11,8 +11,7 @@ const current_t kVoltage = 9;
 const temp_t kTemp = 2000;
 
 const delay_t kIterations = 100000;
-const delay_t kSimulationTime = 0.01;
-const delay_t kDeltaTime = kSimulationTime / kIterations;
+const delay_t kDeltaTime = 1e-7;
 
 const physical_t kElectronPerCharge = 10000;
 
@@ -26,10 +25,10 @@ int main() {
              kWolfram, kPotentialGridGap, kElectronPerCharge);
 
   for (size_t i = 0; i < kIterations; ++i) {
-    tube.NewFrame(kDeltaTime);
     std::cout <<
       tube.GetElectricityField({0, kHeight / 2}).x << ' ' <<
-      tube.GetElectricityField({0, kHeight / 2}).y <<
-      ' ' << tube.CountCharges() << '\n';
+      tube.GetElectricityField({0, kHeight / 2}).y << ' ' <<
+      tube.CountCharges() << '\n';
+    tube.NewFrame(kDeltaTime);
   }
 }
