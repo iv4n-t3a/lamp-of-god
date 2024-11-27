@@ -14,8 +14,6 @@ with open(FILE_PATH) as file:
         x_dots.append(x)
         y_dots.append(y * 1000)
 
-print(x_dots)
-print(y_dots)
 plt.plot(x_dots, y_dots, markersize=1.0, color='r', marker='o')
 plt.xlim(x_dots[0], x_dots[-1])
 plt.ylim(y_dots[0], y_dots[-1])

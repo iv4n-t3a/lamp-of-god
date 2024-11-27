@@ -24,9 +24,9 @@ const double kHeatmapScale = 10000;
 const std::pair<size_t, size_t> kHeatmapResolution = {kWidth * kHeatmapScale,
                                                       kHeight* kHeatmapScale};
 
-const double kCVCMinVoltage = 0.0002;
+const double kCVCMinVoltage = 0.002;
 const double kCVCMaxVoltage = 0.5;
-const double kCVCStep = 0.05;
+const double kCVCStep = 0.01;
 const size_t kCVCIterations = 10;
 
 void BuildCVC(std::string path, voltage_t min, voltage_t max, voltage_t step,
@@ -53,7 +53,7 @@ int main() {
 
   std::cout << "OK" << std::endl;
 
-  AveragePotentialObserver(&tube, ".", kHeatmapResolution);
+  AveragePotentialObserver observer(&tube, "potentials", kHeatmapResolution);
 
   std::cout << "Running simulation..." << std::endl;
 
@@ -65,7 +65,7 @@ int main() {
 
   std::cout << "Building current–voltage characteristic..." << std::endl;
 
-  BuildCVC("data", kCVCMinVoltage, kCVCMaxVoltage, kCVCStep, kCVCIterations);
+  BuildCVC("cvc", kCVCMinVoltage, kCVCMaxVoltage, kCVCStep, kCVCIterations);
 
   std::cout << "OK" << std::endl;
 }
