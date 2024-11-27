@@ -66,6 +66,7 @@ AveragePotentialObserver::AveragePotentialObserver(Tube* tube,
 }
 
 void AveragePotentialObserver::NewFrame(delay_t delta_time) {
+  std::ignore = delta_time;
   iterations_count_++;
 
   auto dimensions = tube_->GetDimensions();
@@ -85,8 +86,8 @@ void AveragePotentialObserver::NewFrame(delay_t delta_time) {
 
 AveragePotentialObserver::~AveragePotentialObserver() {
   std::ofstream output_file(file_path_);
-  for (int i = 0; i < potentials_.size(); i++) {
-    for (int j = 0; j < potentials_[i].size(); j++) {
+  for (size_t i = 0; i < potentials_.size(); i++) {
+    for (size_t j = 0; j < potentials_[i].size(); j++) {
       output_file << potentials_[i][j].Len() / iterations_count_ << ' ';
     }
     output_file << '\n';
