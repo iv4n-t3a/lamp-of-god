@@ -8,15 +8,15 @@
 #include "math.hpp"
 #include "phys.hpp"
 
-Diode::Diode(dist_t width, dist_t height, dist_t catode_width,
+Diode::Diode(dist_t width, dist_t height, dist_t cathode_width,
              dist_t anode_width, temp_t start_temp, voltage_t voltage,
-             Conductor condcutor, dist_t potential_grid_gap,
+             Conductor conductor, dist_t potential_grid_gap,
              physical_t electrons_per_charge)
     : Tube(start_temp, width, height),
-      catode_width_(catode_width),
+      cathode_width_(cathode_width),
       anode_width_(anode_width),
-      catode_potential_(voltage),
-      cond_(condcutor),
+      cathode_potential_(voltage),
+      cond_(conductor),
       potential_grid_gap_(potential_grid_gap),
       electrons_per_charge_(electrons_per_charge) {}
 
@@ -28,19 +28,19 @@ Vector<field_t> Diode::GetPotential(Vector<dist_t> pos) const {
 
 void Diode::NewFrameSetup(delay_t delta_time) {
   SpawnNewCharges(delta_time);
-  AplyElectrycForce(delta_time);
+  ApplyElectricForce(delta_time);
   RemoveFinishedCharges(delta_time);
 }
 
 void Diode::SpawnNewCharges(delay_t delta_time) {
   static std::mt19937 gen;
-  static std::uniform_real_distribution<> dis_x(0, catode_width_);
+  static std::uniform_real_distribution<> dis_x(0, cathode_width_);
   static std::uniform_real_distribution<> dis_y(0, height_);
 
   static physical_t new_charges = 0;
 
   new_charges +=
-      CountNewCharge(temp_, cond_, delta_time, catode_width_ * height_) /
+      CountNewCharge(temp_, cond_, delta_time, cathode_width_ * height_) /
       kElementaryCharge / electrons_per_charge_;
 
   for (size_t i = 0; i < new_charges; ++i) {
@@ -62,16 +62,16 @@ void Diode::RemoveFinishedCharges(delay_t delta_time) {
   }
 }
 
-void Diode::AplyElectrycForce(delay_t delta_time) {
+void Diode::ApplyElectricForce(delay_t delta_time) {
   for (size_t i = 0; i < CountCharges(); ++i) {
-    AplyElectrycForceToCharge(delta_time, i);
+    ApplyElectricForceToCharge(delta_time, i);
   }
   for (size_t i = 0; i < CountCharges(); ++i) {
     charges_[i].position += charges_[i].velocity * delta_time;
   }
 }
 
-void Diode::AplyElectrycForceToCharge(delay_t delta_time, size_t idx) {
+void Diode::ApplyElectricForceToCharge(delay_t delta_time, size_t idx) {
   std::ignore = delta_time;
 
   const physical_t kCharge = electrons_per_charge_ * kElementaryCharge;

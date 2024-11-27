@@ -24,16 +24,16 @@ class Diode : public Tube {
 
   void SpawnNewCharges(delay_t delta_time);
   void RemoveFinishedCharges(delay_t delta_time);
-  void AplyElectrycForce(delay_t delta_time);
+  void ApplyElectricForce(delay_t delta_time);
 
-  void AplyElectrycForceToCharge(delay_t delta_time, size_t idx);
+  void ApplyElectricForceToCharge(delay_t delta_time, size_t idx);
 
   bool IsInsideTube(size_t idx);
   void RemoveCharge(size_t idx);
 
-  dist_t catode_width_;
+  dist_t cathode_width_;
   dist_t anode_width_;
-  potential_t catode_potential_;
+  potential_t cathode_potential_;
   Conductor cond_;
 
   dist_t potential_grid_gap_;
