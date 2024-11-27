@@ -8,14 +8,11 @@
 #include "math.hpp"
 #include "phys.hpp"
 
-Diode::Diode(dist_t width, dist_t height, dist_t cathode_width,
-             dist_t anode_width, temp_t temp, voltage_t voltage,
+Diode::Diode(dist_t width, dist_t height, dist_t cathode_area, temp_t temp,
              Conductor conductor, dist_t potential_grid_gap,
              physical_t electrons_per_charge)
     : Tube(temp, width, height),
-      cathode_width_(cathode_width),
-      anode_width_(anode_width),
-      cathode_potential_(voltage),
+      cathode_area_(cathode_area),
       cond_(conductor),
       potential_grid_gap_(potential_grid_gap),
       electrons_per_charge_(electrons_per_charge) {
@@ -64,18 +61,16 @@ void Diode::NewFrameSetup(delay_t delta_time) {
 
 void Diode::SpawnNewCharges(delay_t delta_time) {
   static std::mt19937 gen;
-  static std::uniform_real_distribution<> dis_x(0, cathode_width_);
   static std::uniform_real_distribution<> dis_y(0, height_);
 
-  new_charges_ +=
-      CalcNewCharge(temp_, cond_, delta_time, cathode_width_ * height_) /
-      kElementaryCharge / electrons_per_charge_;
+  new_charges_ += CalcNewCharge(temp_, cond_, delta_time, cathode_area_) /
+                  kElementaryCharge / electrons_per_charge_;
 
   double new_charges_int_part = std::floor(new_charges_);
   new_charges_ -= new_charges_int_part;
 
   for (size_t i = 0; i < new_charges_int_part; ++i) {
-    dist_t x = dis_x(gen);
+    dist_t x = 0;
     dist_t y = dis_y(gen);
     Vector<dist_t> position = {x, y};
     Vector<vel_t> velocity = {0, 0};
@@ -84,13 +79,18 @@ void Diode::SpawnNewCharges(delay_t delta_time) {
 }
 
 void Diode::RemoveFinishedCharges(delay_t delta_time) {
-  std::ignore = delta_time;
+  current_t removed = 0;
 
   for (size_t i = 0; i < CountCharges(); ++i) {
     if (not IsInsideTube(i)) {
       RemoveCharge(i);
+      if (IsOnAnode(i)) {
+        removed += 1;
+      }
     }
   }
+
+  current_ = removed * electrons_per_charge_ * kElementaryCharge / delta_time;
 }
 
 void Diode::ApplyElectricForce(delay_t delta_time) {
@@ -119,7 +119,10 @@ bool Diode::IsInsideTube(Vector<dist_t> pos) const {
   return pos.x >= 0 and pos.x <= width_ and pos.y >= 0 and pos.y <= height_ and
          not std::isnan(pos.x) and not std::isnan(pos.y);
 }
-
+bool Diode::IsOnAnode(size_t idx) {
+  auto pos = charges_[idx].position;
+  return pos.x >= width_ and pos.y >= 0 and pos.y <= height_;
+}
 void Diode::RemoveCharge(size_t idx) {
   charges_[idx] = charges_.back();
   charges_.pop_back();
