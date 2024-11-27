@@ -9,10 +9,10 @@
 #include "phys.hpp"
 
 Diode::Diode(dist_t width, dist_t height, dist_t cathode_width,
-             dist_t anode_width, temp_t start_temp, voltage_t voltage,
+             dist_t anode_width, temp_t temp, voltage_t voltage,
              Conductor conductor, dist_t potential_grid_gap,
              physical_t electrons_per_charge)
-    : Tube(start_temp, width, height),
+    : Tube(temp, width, height),
       cathode_width_(cathode_width),
       anode_width_(anode_width),
       cathode_potential_(voltage),
@@ -40,7 +40,7 @@ void Diode::SpawnNewCharges(delay_t delta_time) {
   static physical_t new_charges = 0;
 
   new_charges +=
-      CountNewCharge(temp_, cond_, delta_time, cathode_width_ * height_) /
+      CalcNewCharge(temp_, cond_, delta_time, cathode_width_ * height_) /
       kElementaryCharge / electrons_per_charge_;
 
   for (size_t i = 0; i < new_charges; ++i) {

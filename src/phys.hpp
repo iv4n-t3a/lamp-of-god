@@ -51,12 +51,12 @@ inline current_t CurrentDensity(temp_t temp, Conductor cond) {
                   -cond.work_function / (kBoltzmanConstant * temp));
 }
 
-inline charge_t CountNewCharge(temp_t temp, Conductor cond, delay_t time,
-                               dist_t area) {
+inline charge_t CalcNewCharge(temp_t temp, Conductor cond, delay_t time,
+                              dist_t area) {
   return CurrentDensity(temp, cond) * area * time;
 }
 
-inline Vector<potential_t> CountPotential(
+inline Vector<potential_t> CalcPotential(
     Vector<dist_t> charge_position, Vector<dist_t> target_position,
     charge_t charge, physical_t permutivity = kVacuumPermutivity) {
   Vector<dist_t> radius_vector = target_position - charge_position;
@@ -64,7 +64,7 @@ inline Vector<potential_t> CountPotential(
          radius_vector.SqrLen();
 }
 
-inline Vector<potential_t> CountElectronsPotential(Vector<vel_t> velocity) {
+inline Vector<potential_t> CalcElectronsPotential(Vector<vel_t> velocity) {
   return velocity.Normalized() * velocity.SqrLen() * kElectronMass / 2 /
          kElementaryCharge;
 }

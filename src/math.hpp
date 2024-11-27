@@ -24,7 +24,10 @@ struct Vector {
     return Vector(x - other.x, y - other.y);
   }
   Vector operator*(T mult) const { return Vector(x * mult, y * mult); }
-  Vector operator/(T div) const { return Vector(x / div, y / div); }
+  Vector operator/(T div) const {
+    assert(div != T());
+    return Vector(x / div, y / div);
+  }
 
   Vector& operator+=(Vector other) {
     x += other.x;
@@ -42,6 +45,7 @@ struct Vector {
     return *this;
   }
   Vector& operator/=(T div) {
+    assert(div != T());
     x /= div;
     y /= div;
     return *this;
@@ -53,8 +57,8 @@ struct Vector {
   Vector<T>& Normalize() {
     T len = Len();
 
-    if (len == 0) {
-      return {0, 0};
+    if (len == T()) {
+      return {T(), T()};
     }
 
     x /= len;
@@ -64,8 +68,8 @@ struct Vector {
   Vector<T> Normalized() {
     T len = Len();
 
-    if (len == 0) {
-      return {0, 0};
+    if (len == T()) {
+      return {T(), T()};
     }
 
     return Vector<T>(x / len, y / len);
