@@ -20,6 +20,7 @@ class Diode : public Tube {
   size_t CountCharges() const { return charges_.size(); }
 
  protected:
+  static double new_charges;
   void NewFrameSetup(delay_t delta_time) override;
 
   void SpawnNewCharges(delay_t delta_time);
