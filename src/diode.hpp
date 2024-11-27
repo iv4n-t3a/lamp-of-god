@@ -13,7 +13,7 @@ class Diode : public Tube {
  public:
   Diode(dist_t width, dist_t height, dist_t catode_width, dist_t anode_width,
         temp_t temp, voltage_t voltage, Conductor condcutor,
-        dist_t potential_grid_gap, size_t electrons_per_charge);
+        dist_t potential_grid_gap, physical_t electrons_per_charge);
 
   Vector<field_t> GetElectricityField(Vector<dist_t> pos) const override;
 
@@ -30,6 +30,7 @@ class Diode : public Tube {
 
   void AplyElectrycForceToCharge(delay_t delta_time, size_t idx);
 
+  bool IsInsideTube(size_t idx);
   void RemoveCharge(size_t idx);
 
   dist_t catode_width_;
@@ -38,7 +39,7 @@ class Diode : public Tube {
   Conductor cond_;
 
   dist_t potential_grid_gap_;
-  size_t electrons_per_charge_ = 1;
+  physical_t electrons_per_charge_ = 1;
 
   std::vector<Charge> charges_;
 };

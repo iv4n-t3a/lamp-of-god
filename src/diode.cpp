@@ -12,7 +12,7 @@
 Diode::Diode(dist_t width, dist_t height, dist_t catode_width,
              dist_t anode_width, temp_t start_temp, voltage_t voltage,
              Conductor condcutor, dist_t potential_grid_gap,
-             size_t electrons_per_charge)
+             physical_t electrons_per_charge)
     : Tube(start_temp, width, height),
       catode_width_(catode_width),
       anode_width_(anode_width),
@@ -24,13 +24,11 @@ Diode::Diode(dist_t width, dist_t height, dist_t catode_width,
 Vector<field_t> Diode::GetElectricityField(Vector<dist_t> pos) const {
   std::ignore = pos;
 
-  if (charges_.size() == 0) {
-    std::cout << "no electrons: ";
+  if (charges_.size() < 100) {
     return {0, 1};
   }
 
-  std::cout << "has electrons: ";
-  return charges_[0].position;
+  return charges_[100].position;
 }
 
 Vector<field_t> Diode::GetPotential(Vector<dist_t> pos) const {
@@ -50,10 +48,14 @@ void Diode::SpawnNewCharges(delay_t delta_time) {
   static std::uniform_real_distribution<> dis_y(0, height_);
 
   const size_t kNewCharges =
-      CountNewCharge(temp_, cond_, delta_time, anode_width_ * height_) /
+      CountNewCharge(temp_, cond_, delta_time, catode_width_ * height_) /
       kElementaryCharge / electrons_per_charge_;
 
-  std::cout << kNewCharges << std::endl;
+  std::cout << "-----" << std::endl;
+  std::cout << (CountNewCharge(temp_, cond_, delta_time, catode_width_ * height_)) << std::endl;
+  std::cout << (CountNewCharge(temp_, cond_, delta_time, catode_width_ * height_) / kElementaryCharge / electrons_per_charge_) << std::endl;
+  std::cout << (size_t)(CountNewCharge(temp_, cond_, delta_time, catode_width_ * height_) / kElementaryCharge / electrons_per_charge_) << std::endl;
+  std::cout << "+++++" << std::endl;
 
   for (size_t i = 0; i < kNewCharges; ++i) {
     dist_t x = dis_x(gen);
@@ -68,7 +70,7 @@ void Diode::RemoveFinishedCharges(delay_t delta_time) {
   std::ignore = delta_time;
 
   for (size_t i = 0; i < CountCharges(); ++i) {
-    if (charges_[i].position.x >= width_ - anode_width_) {
+    if (not IsInsideTube(i)) {
       RemoveCharge(i);
     }
   }
@@ -108,6 +110,11 @@ void Diode::AplyElectrycForceToCharge(delay_t delta_time, size_t idx) {
   Vector<vel_t> velocity_delta =
       velocity_delta_sqr / std::pow(velocity_delta_sqr.SqrLen(), 1. / 4);
   charges_[idx].velocity += velocity_delta;
+}
+
+bool Diode::IsInsideTube(size_t idx) {
+  auto pos = charges_[idx].position;
+  return pos.x >= 0 and pos.x <= width_ and pos.y >= 0 and pos.y <= height_;
 }
 
 void Diode::RemoveCharge(size_t idx) {
