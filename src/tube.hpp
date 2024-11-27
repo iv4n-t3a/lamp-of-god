@@ -40,5 +40,5 @@ class TubeObserver {
   virtual ~TubeObserver() = default;
 
  protected:
-  Tube* tube_;
+  const Tube* tube_;
 };
