@@ -16,7 +16,8 @@ class Diode : public Tube {
         physical_t electrons_per_charge);
 
   current_t GetCurrent() const override { return current_; }
-  Vector<potential_t> GetPotential(Vector<dist_t> pos) const override;
+  potential_t GetPotential(Vector<dist_t> pos) const override;
+  Vector<field_t> GetElectricityField(Vector<dist_t> pos) const override;
 
   size_t CountCharges() const { return charges_.size(); }
 
@@ -29,8 +30,9 @@ class Diode : public Tube {
 
   void ApplyElectricForceToCharge(delay_t delta_time, size_t idx);
 
-  bool IsInsideTube(size_t idx);
   bool IsOnAnode(size_t idx);
+  bool IsInsideTube(size_t idx) const;
+  bool IsInsideTube(Vector<dist_t>) const;
   void RemoveCharge(size_t idx);
 
   dist_t cathode_area_;
@@ -38,6 +40,7 @@ class Diode : public Tube {
 
   dist_t potential_grid_gap_;
   physical_t electrons_per_charge_ = 1;
+  std::vector<std::vector<potential_t>> potential_grid_;
 
   current_t current_ = 0;
   physical_t new_charges_ = 0;

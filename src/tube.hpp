@@ -25,7 +25,8 @@ class Tube {
   }
 
   virtual current_t GetCurrent() const = 0;
-  virtual Vector<potential_t> GetPotential(Vector<dist_t>) const = 0;
+  virtual potential_t GetPotential(Vector<dist_t>) const = 0;
+  virtual Vector<field_t> GetElectricityField(Vector<dist_t>) const = 0;
 
   virtual ~Tube() = default;
 
