@@ -18,6 +18,8 @@ class RectangleTube : public Tube {
 
   Vector<potential_t> GetPotential(Vector<dist_t> pos) override;
 
+  virtual std::pair<dist_t, dist_t> GetDimensions() const override;
+
   bool IsInsideTube(Vector<dist_t> pos) override;
 
   size_t CountElectrons() const { return electrons_.size(); }

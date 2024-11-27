@@ -16,6 +16,8 @@ class Tube {
   virtual Vector<field_t> GetElectricityField(Vector<dist_t>) = 0;
   virtual Vector<potential_t> GetPotential(Vector<dist_t>) = 0;
 
+  virtual std::pair<dist_t, dist_t> GetDimensions() const = 0;
+
   virtual bool IsInsideTube(Vector<dist_t>) = 0;
   virtual ~Tube() = default;
 
