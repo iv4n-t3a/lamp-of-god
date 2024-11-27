@@ -119,7 +119,7 @@ bool Diode::IsInsideTube(Vector<dist_t> pos) const {
   return pos.x >= 0 and pos.x <= width_ and pos.y >= 0 and pos.y <= height_ and
          not std::isnan(pos.x) and not std::isnan(pos.y);
 }
-bool Diode::IsOnAnode(size_t idx) {
+bool Diode::IsOnAnode(size_t idx) const {
   auto pos = charges_[idx].position;
   return pos.x >= width_ and pos.y >= 0 and pos.y <= height_;
 }

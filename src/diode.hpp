@@ -30,7 +30,7 @@ class Diode : public Tube {
 
   void ApplyElectricForceToCharge(delay_t delta_time, size_t idx);
 
-  bool IsOnAnode(size_t idx);
+  bool IsOnAnode(size_t idx) const;
   bool IsInsideTube(size_t idx) const;
   bool IsInsideTube(Vector<dist_t>) const;
   void RemoveCharge(size_t idx);
