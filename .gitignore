@@ -1,2 +1,7 @@
 bin
 diff
+build
+cmake-build-debug
+.idea
+data
+.env
