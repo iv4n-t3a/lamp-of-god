@@ -29,7 +29,8 @@ class Diode : public Tube {
 
   void ApplyElectricForceToCharge(delay_t delta_time, size_t idx);
 
-  bool IsInsideTube(size_t idx);
+  bool IsInsideTube(size_t idx) const;
+  bool IsInsideTube(Vector<dist_t>) const;
   void RemoveCharge(size_t idx);
 
   dist_t cathode_width_;

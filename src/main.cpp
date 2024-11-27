@@ -13,7 +13,7 @@ const temp_t kTemp = 2200;
 const delay_t kIterations = 10000;
 const delay_t kDeltaTime = 1e-7;
 
-const physical_t kElectronPerCharge = 10000;
+const physical_t kElectronPerCharge = 100000;
 
 const size_t kCatodeSegments = 1000;
 const dist_t kPotentialGridGap = kHeight / kCatodeSegments;

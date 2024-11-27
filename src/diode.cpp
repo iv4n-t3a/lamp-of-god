@@ -35,13 +35,19 @@ Diode::Diode(dist_t width, dist_t height, dist_t cathode_width,
 }
 
 potential_t Diode::GetPotential(Vector<dist_t> pos) const {
-  int grid_x = (pos.x + potential_grid_gap_ / 2) / potential_grid_gap_;
-  int grid_y = (pos.y + potential_grid_gap_ / 2) / potential_grid_gap_;
+  size_t grid_x = (pos.x + potential_grid_gap_ / 2) / potential_grid_gap_;
+  size_t grid_y = (pos.y + potential_grid_gap_ / 2) / potential_grid_gap_;
+
+  if (grid_x >= potential_grid_.size() or grid_y >= potential_grid_[0].size()) {
+    return 0;
+  }
+
   return potential_grid_[grid_x][grid_y];
 }
 Vector<field_t> Diode::GetElectricityField(Vector<dist_t> pos) const {
   Vector<dist_t> delta_x = {potential_grid_gap_, 0};
   Vector<dist_t> delta_y = {0, potential_grid_gap_};
+
   field_t field_x =
       (GetPotential(pos) - GetPotential(pos + delta_x)) / potential_grid_gap_;
   field_t field_y =
@@ -94,8 +100,6 @@ void Diode::ApplyElectricForce(delay_t delta_time) {
 }
 
 void Diode::ApplyElectricForceToCharge(delay_t delta_time, size_t idx) {
-  std::ignore = delta_time;
-
   const physical_t kCharge = electrons_per_charge_ * kElementaryCharge;
   const physical_t kMass = electrons_per_charge_ * kElectronMass;
 
@@ -108,8 +112,10 @@ void Diode::ApplyElectricForceToCharge(delay_t delta_time, size_t idx) {
       vel * delta_time + accel * delta_time * delta_time / 2;
 }
 
-bool Diode::IsInsideTube(size_t idx) {
-  auto pos = charges_[idx].position;
+bool Diode::IsInsideTube(size_t idx) const {
+  return IsInsideTube(charges_[idx].position);
+}
+bool Diode::IsInsideTube(Vector<dist_t> pos) const {
   return pos.x >= 0 and pos.x <= width_ and pos.y >= 0 and pos.y <= height_ and
          not std::isnan(pos.x) and not std::isnan(pos.y);
 }
