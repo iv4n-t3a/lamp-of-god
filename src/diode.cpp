@@ -20,8 +20,6 @@ Diode::Diode(dist_t width, dist_t height, dist_t cathode_width,
       potential_grid_gap_(potential_grid_gap),
       electrons_per_charge_(electrons_per_charge) {}
 
-double Diode::new_charges = 0.0;
-
 Vector<field_t> Diode::GetPotential(Vector<dist_t> pos) const {
   // TODO implement with poison
   std::ignore = pos;
