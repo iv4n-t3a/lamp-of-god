@@ -18,7 +18,8 @@ class Tube {
   void SetWarmerTemperature(temp_t temp);
   std::pair<dist_t, dist_t> GetDimensions() const;
 
-  virtual Vector<potential_t> GetPotential(Vector<dist_t>) const = 0;
+  virtual potential_t GetPotential(Vector<dist_t>) const = 0;
+  virtual Vector<field_t> GetElectricityField(Vector<dist_t>) const = 0;
 
   virtual ~Tube() = default;
 

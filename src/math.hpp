@@ -85,14 +85,19 @@ struct Vector {
 };
 
 template <typename T>
-void SolvePoisson(std::vector<std::vector<T>>& potential_matrix, const std::vector<std::vector<bool>>& boundary_conditions, long double tolerance=1e-6) {
+void SolvePoisson(std::vector<std::vector<T>>& potential_matrix,
+                  const std::vector<std::vector<bool>>& boundary_conditions,
+                  T tolerance = 1e-6) {
   std::vector<std::vector<T>> new_potential_matrix = potential_matrix;
   while (true) {
     new_potential_matrix = potential_matrix;
     for (size_t i = 1; i < new_potential_matrix.size() - 1; i++) {
       for (size_t j = 1; j < new_potential_matrix[i].size() - 1; j++) {
         if (!boundary_conditions[i][j]) {
-          new_potential_matrix[i][j] = (potential_matrix[i - 1][j] + potential_matrix[i + 1][j] + potential_matrix[i][j - 1] + potential_matrix[i][j - 1]) / 4;
+          new_potential_matrix[i][j] =
+              (potential_matrix[i - 1][j] + potential_matrix[i + 1][j] +
+               potential_matrix[i][j - 1] + potential_matrix[i][j - 1]) /
+              4;
         }
       }
     }
@@ -100,7 +105,9 @@ void SolvePoisson(std::vector<std::vector<T>>& potential_matrix, const std::vect
     T max_difference = 0;
     for (size_t i = 1; i < new_potential_matrix.size() - 1; i++) {
       for (size_t j = 1; j < new_potential_matrix[i].size() - 1; j++) {
-        max_difference = std::max(max_difference, std::abs(potential_matrix[i][j], new_potential_matrix[i][j]));
+        max_difference = std::max(
+            max_difference,
+            std::abs(potential_matrix[i][j], new_potential_matrix[i][j]));
       }
     }
 
