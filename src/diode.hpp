@@ -31,7 +31,6 @@ class Diode : public Tube {
   bool IsInsideTube(size_t idx);
   void RemoveCharge(size_t idx);
 
-  double new_charges = 0;
   dist_t cathode_width_;
   dist_t anode_width_;
   potential_t cathode_potential_;
@@ -40,5 +39,6 @@ class Diode : public Tube {
   dist_t potential_grid_gap_;
   physical_t electrons_per_charge_ = 1;
 
+  physical_t new_charges = 0;
   std::vector<Charge> charges_;
 };
