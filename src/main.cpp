@@ -23,7 +23,7 @@ int main() {
   Diode tube(kWidth, kHeight, kCathodeArea, kTemp, kTungsten, kPotentialGridGap,
              kElectronPerCharge);
 
-  tube.SetAnodePotential(kVoltage);
+  tube.SetCathodePotential(kVoltage);
 
   for (size_t i = 0; i < kIterations; ++i) {
     tube.NewFrame(kDeltaTime);

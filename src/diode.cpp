@@ -60,7 +60,7 @@ void Diode::RemoveFinishedCharges(delay_t delta_time) {
     }
   }
 
-  current_ = removed / delta_time;
+  current_ = removed * electrons_per_charge_ * kElementaryCharge / delta_time;
 }
 
 void Diode::ApplyElectricForce(delay_t delta_time) {
