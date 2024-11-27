@@ -2,24 +2,26 @@
 
 #include <algorithm>
 #include <fstream>
+#include <iostream>
 
 PotentialObserver::PotentialObserver(Tube* tube,
-  const std::string& directory_path,
-  const std::pair<int, int>& resolution,
-  std::vector<delay_t> offsets)
+                                     const std::string& directory_path,
+                                     const std::pair<int, int>& resolution,
+                                     std::vector<delay_t> offsets)
     : TubeObserver(tube),
       directory_path_(directory_path),
       offsets_(offsets),
       width_(resolution.first),
-      height_(resolution.second)
-{
+      height_(resolution.second) {
   std::sort(offsets_.begin(), offsets_.end());
 }
 
 void PotentialObserver::NewFrame(delay_t delta_time) {
   time_passed_ += delta_time;
-  if (offset_index_ < std::size(offsets_) and time_passed_ >= offsets_[offset_index_]) {
-    std::ofstream output_file(directory_path_ + '/' + std::to_string(time_passed_) + ".txt");
+  if (offset_index_ < std::size(offsets_) and
+      time_passed_ >= offsets_[offset_index_]) {
+    std::ofstream output_file(directory_path_ + '/' +
+                              std::to_string(time_passed_) + ".txt");
     std::vector<std::vector<potential_t>> potentials;
 
     auto dimensions = tube_->GetDimensions();
@@ -28,13 +30,16 @@ void PotentialObserver::NewFrame(delay_t delta_time) {
     for (int i = 0; i < height_ - 1; i++) {
       potentials.push_back(std::vector<potential_t>());
       for (int j = 0; j < width_ - 1; j++) {
-        potentials.back().push_back(tube_->GetPotential({j * tube_width / (width_ - 1), i * tube_height / (height_ - 1)}));
+        potentials.back().push_back(tube_->GetPotential(
+            {j * tube_width / (width_ - 1), i * tube_height / (height_ - 1)}));
       }
-      potentials.back().push_back(tube_->GetPotential({tube_width, i * tube_height / (height_ - 1)}));
+      potentials.back().push_back(
+          tube_->GetPotential({tube_width, i * tube_height / (height_ - 1)}));
     }
     potentials.push_back(std::vector<potential_t>());
     for (int j = 0; j < width_ - 1; j++) {
-      potentials.back().push_back(tube_->GetPotential({j * tube_width / (width_ - 1), tube_height}));
+      potentials.back().push_back(
+          tube_->GetPotential({j * tube_width / (width_ - 1), tube_height}));
     }
     potentials.back().push_back(tube_->GetPotential({tube_width, tube_height}));
 
@@ -49,10 +54,9 @@ void PotentialObserver::NewFrame(delay_t delta_time) {
   }
 }
 
-
-AveragePotentialObserver::AveragePotentialObserver(Tube* tube,
-  const std::string& file_path,
-  const std::pair<int, int>& resolution)
+AveragePotentialObserver::AveragePotentialObserver(
+    Tube* tube, const std::string& file_path,
+    const std::pair<int, int>& resolution)
     : TubeObserver(tube),
       file_path_(file_path),
       width_(resolution.first),
@@ -74,12 +78,15 @@ void AveragePotentialObserver::NewFrame(delay_t delta_time) {
   auto tube_height = dimensions.second;
   for (int i = 0; i < height_ - 1; i++) {
     for (int j = 0; j < width_ - 1; j++) {
-      potentials_[i][j] += tube_->GetPotential({j * tube_width / (width_ - 1), i * tube_height / (height_ - 1)});
+      potentials_[i][j] += tube_->GetPotential(
+          {j * tube_width / (width_ - 1), i * tube_height / (height_ - 1)});
     }
-    potentials_[i].back() += tube_->GetPotential({tube_width, i * tube_height / (height_ - 1)});
+    potentials_[i].back() +=
+        tube_->GetPotential({tube_width, i * tube_height / (height_ - 1)});
   }
   for (int j = 0; j < width_ - 1; j++) {
-    potentials_.back()[j] +=  tube_->GetPotential({j * tube_width / (width_ - 1), tube_height});
+    potentials_.back()[j] +=
+        tube_->GetPotential({j * tube_width / (width_ - 1), tube_height});
   }
   potentials_.back().back() += tube_->GetPotential({tube_width, tube_height});
 }

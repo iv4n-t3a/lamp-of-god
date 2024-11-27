@@ -3,7 +3,6 @@
 #include <cassert>
 #include <cmath>
 #include <random>
-#include <tuple>
 
 #include "math.hpp"
 #include "phys.hpp"
@@ -35,11 +34,11 @@ potential_t Diode::GetPotential(Vector<dist_t> pos) const {
   size_t grid_x = (pos.x + potential_grid_gap_ / 2) / potential_grid_gap_;
   size_t grid_y = (pos.y + potential_grid_gap_ / 2) / potential_grid_gap_;
 
-  if (grid_x >= potential_grid_.size() or grid_y >= potential_grid_[0].size()) {
+  if (grid_y >= potential_grid_.size() or
+      grid_x >= potential_grid_[grid_y].size()) {
     return 0;
   }
-
-  return potential_grid_[grid_x][grid_y];
+  return potential_grid_[grid_y][grid_x];
 }
 Vector<field_t> Diode::GetElectricityField(Vector<dist_t> pos) const {
   Vector<dist_t> delta_x = {potential_grid_gap_, 0};

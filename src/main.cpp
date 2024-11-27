@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "diode.hpp"
+#include "observers.hpp"
 #include "phys.hpp"
 
 const dist_t kWidth = 0.03;
@@ -9,13 +10,18 @@ const dist_t kCathodeArea = 0.01 * 0.01;
 const current_t kVoltage = 100;
 const temp_t kTemp = 2200;
 
-const delay_t kIterations = 10000;
+const delay_t kIterations = 100;
 const delay_t kDeltaTime = 1e-7;
 
 const physical_t kElectronPerCharge = 100000;
 
 const size_t kCatodeSegments = 1000;
 const dist_t kPotentialGridGap = kHeight / kCatodeSegments;
+
+const double kHeatmapScale = 10000;
+
+const std::pair<size_t, size_t> kHeatmapResolution = {kWidth * kHeatmapScale,
+                                                      kHeight* kHeatmapScale};
 
 int main() {
   std::cout << "Solving Poisson..." << std::endl;
@@ -26,6 +32,9 @@ int main() {
   tube.SetCathodePotential(kVoltage);
 
   std::cout << "OK" << std::endl;
+
+  AveragePotentialObserver average_potential_observer(&tube, "data",
+                                                      kHeatmapResolution);
 
   std::cout << "Running simulation..." << std::endl;
 
