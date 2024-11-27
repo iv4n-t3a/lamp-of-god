@@ -39,5 +39,6 @@ class Diode : public Tube {
   dist_t potential_grid_gap_;
   physical_t electrons_per_charge_ = 1;
 
+  physical_t new_charges = 0;
   std::vector<Charge> charges_;
 };
