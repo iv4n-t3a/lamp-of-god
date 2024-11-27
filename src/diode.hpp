@@ -6,7 +6,7 @@
 
 struct Charge {
   Vector<dist_t> position;
-  Vector<vel_t> speed;
+  Vector<vel_t> velocity;
 };
 
 class Diode : public Tube {
@@ -27,6 +27,8 @@ class Diode : public Tube {
   void SpawnNewCharges(delay_t delta_time);
   void RemoveFinishedCharges(delay_t delta_time);
   void AplyElectrycForce(delay_t delta_time);
+
+  void AplyElectrycForceToCharge(delay_t delta_time, size_t idx);
 
   void RemoveCharge(size_t idx);
 

@@ -1,6 +1,8 @@
 #include "diode.hpp"
 
 #include <cassert>
+#include <cmath>
+#include <iostream>
 #include <random>
 #include <tuple>
 
@@ -20,18 +22,15 @@ Diode::Diode(dist_t width, dist_t height, dist_t catode_width,
       electrons_per_charge_(electrons_per_charge) {}
 
 Vector<field_t> Diode::GetElectricityField(Vector<dist_t> pos) const {
-  size_t segments = height_ / potential_grid_gap_;
-  voltage_t segment_potential = catode_potential_ / segments;
+  std::ignore = pos;
 
-  double x = catode_width_ / 2;
-
-  std::ignore = segment_potential;
-  for (double y = 0; y < height_; y += potential_grid_gap_) {
-    std::ignore = x;
+  if (charges_.size() == 0) {
+    std::cout << "no electrons: ";
+    return {0, 1};
   }
 
-  std::ignore = pos;
-  return {0, 0};
+  std::cout << "has electrons: ";
+  return charges_[0].position;
 }
 
 Vector<field_t> Diode::GetPotential(Vector<dist_t> pos) const {
@@ -54,6 +53,8 @@ void Diode::SpawnNewCharges(delay_t delta_time) {
       CountNewCharge(temp_, cond_, delta_time, anode_width_ * height_) /
       kElementaryCharge / electrons_per_charge_;
 
+  std::cout << kNewCharges << std::endl;
+
   for (size_t i = 0; i < kNewCharges; ++i) {
     dist_t x = dis_x(gen);
     dist_t y = dis_y(gen);
@@ -75,15 +76,38 @@ void Diode::RemoveFinishedCharges(delay_t delta_time) {
 
 void Diode::AplyElectrycForce(delay_t delta_time) {
   for (size_t i = 0; i < CountCharges(); ++i) {
-    const mass_t kChargeMass = electrons_per_charge_ * kElectronMass;
-    Vector<force_t> force = GetElectricityField(charges_[i].position) *
-                            electrons_per_charge_ * kElementaryCharge;
-    Vector<accel_t> acceleration = force / kChargeMass;
-
-    charges_[i].speed += acceleration * delta_time;
-    charges_[i].position += charges_[i].speed * delta_time +
-                            acceleration * delta_time * delta_time / 2;
+    AplyElectrycForceToCharge(delta_time, i);
   }
+  for (size_t i = 0; i < CountCharges(); ++i) {
+    charges_[i].position += charges_[i].velocity * delta_time;
+  }
+}
+
+void Diode::AplyElectrycForceToCharge(delay_t delta_time, size_t idx) {
+  std::ignore = delta_time;
+
+  const mass_t kChargeMass = electrons_per_charge_ * kElectronMass;
+  const charge_t kCharge = electrons_per_charge_ * kElementaryCharge;
+
+  size_t segments = height_ / potential_grid_gap_;
+  voltage_t segment_potential_value = catode_potential_ / segments;
+
+  Vector<potential_t> potential_delta =
+      CountElectronsPotential(charges_[idx].position);
+
+  dist_t x = 0;
+  for (dist_t y = 0; y < height_; y += potential_grid_gap_) {
+    auto pos = charges_[idx].position;
+    Vector<potential_t> segment_potential =
+        (pos - Vector<dist_t>({x, y})).Normalized() * segment_potential_value;
+    potential_delta += CountPotential(pos, {x, y}, kCharge) - segment_potential;
+  }
+
+  Vector<work_t> energy_delta = potential_delta * kCharge;
+  Vector<vel_t> velocity_delta_sqr = energy_delta * 2 / kChargeMass;
+  Vector<vel_t> velocity_delta =
+      velocity_delta_sqr / std::pow(velocity_delta_sqr.SqrLen(), 1. / 4);
+  charges_[idx].velocity += velocity_delta;
 }
 
 void Diode::RemoveCharge(size_t idx) {

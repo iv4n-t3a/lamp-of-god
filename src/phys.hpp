@@ -30,6 +30,7 @@ const mass_t kElectronMass = 9.1E-31;
 const charge_t kElementaryCharge = 1.6E-19;
 const physical_t kColoumbConstant = 8.99E9;
 const physical_t kBoltzmanConstant = 1.38E-23;
+const physical_t kVacuumPermutivity = 8.85E-12;
 
 const Conductor kWolfram = {4.5 * kElementaryCharge, 60E4};
 
@@ -53,4 +54,16 @@ inline current_t CurrentDensity(temp_t temp, Conductor cond) {
 inline charge_t CountNewCharge(temp_t temp, Conductor cond, delay_t time,
                                dist_t area) {
   return CurrentDensity(temp, cond) * area * time;
+}
+
+inline Vector<potential_t> CountPotential(
+    Vector<dist_t> charge_position, Vector<dist_t> target_position,
+    charge_t charge, physical_t permutivity = kVacuumPermutivity) {
+  Vector<dist_t> radius_vector = target_position - charge_position;
+  return radius_vector * kColoumbConstant * charge / permutivity /
+         radius_vector.SqrLen();
+}
+
+inline Vector<potential_t> CountElectronsPotential(Vector<vel_t> velocity) {
+  return velocity * velocity.SqrLen() * kElectronMass / 2 / kElementaryCharge;
 }
