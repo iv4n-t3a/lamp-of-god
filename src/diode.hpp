@@ -20,7 +20,6 @@ class Diode : public Tube {
   size_t CountCharges() const { return charges_.size(); }
 
  protected:
-  static double new_charges;
   void NewFrameSetup(delay_t delta_time) override;
 
   void SpawnNewCharges(delay_t delta_time);
@@ -32,6 +31,7 @@ class Diode : public Tube {
   bool IsInsideTube(size_t idx);
   void RemoveCharge(size_t idx);
 
+  double new_charges = 0;
   dist_t cathode_width_;
   dist_t anode_width_;
   potential_t cathode_potential_;
