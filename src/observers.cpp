@@ -49,3 +49,46 @@ void PotentialObserver::NewFrame(delay_t delta_time) {
   }
 }
 
+
+AveragePotentialObserver::AveragePotentialObserver(Tube* tube,
+  const std::string& file_path,
+  const std::pair<int, int>& resolution)
+    : TubeObserver(tube),
+      file_path_(file_path),
+      width_(resolution.first),
+      height_(resolution.second) {
+  for (int i = 0; i < height_; i++) {
+    potentials_.push_back(std::vector<Vector<potential_t>>());
+    for (int j = 0; j < width_; j++) {
+      potentials_.back().emplace_back(0, 0);
+    }
+  }
+}
+
+void AveragePotentialObserver::NewFrame(delay_t delta_time) {
+  iterations_count_++;
+
+  auto dimensions = tube_->GetDimensions();
+  auto tube_width = dimensions.first;
+  auto tube_height = dimensions.second;
+  for (int i = 0; i < height_ - 1; i++) {
+    for (int j = 0; j < width_ - 1; j++) {
+      potentials_[i][j] += Vector(j * tube_width / (width_ - 1), i * tube_height / (height_ - 1));
+    }
+    potentials_[i].back() += Vector(tube_width, i * tube_height / (height_ - 1));
+  }
+  for (int j = 0; j < width_ - 1; j++) {
+    potentials_.back()[j] += Vector(j * tube_width / (width_ - 1), tube_height);
+  }
+  potentials_.back().back() += Vector(tube_width, tube_height);
+}
+
+AveragePotentialObserver::~AveragePotentialObserver() {
+  std::ofstream output_file(file_path_);
+  for (int i = 0; i < potentials_.size(); i++) {
+    for (int j = 0; j < potentials_[i].size(); j++) {
+      output_file << potentials_[i][j].Len() / iterations_count_ << ' ';
+    }
+    output_file << '\n';
+  }
+}

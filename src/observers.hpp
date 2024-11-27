@@ -20,3 +20,20 @@ class PotentialObserver : public TubeObserver {
   int width_;
   int height_;
 };
+
+class AveragePotentialObserver : public TubeObserver {
+public:
+  explicit AveragePotentialObserver(Tube* tube, const std::string& file_path,
+                             const std::pair<int, int>& resolution);
+
+  void NewFrame(delay_t delta_time) override;
+
+  ~AveragePotentialObserver() override;
+
+protected:
+  const std::string& file_path_;
+  int iterations_count_ = 0;
+  int width_;
+  int height_;
+  std::vector<std::vector<Vector<potential_t>>> potentials_;
+};
