@@ -35,11 +35,9 @@ Diode::Diode(dist_t width, dist_t height, dist_t cathode_width,
 }
 
 potential_t Diode::GetPotential(Vector<dist_t> pos) const {
-  int grid_height_index =
-      (height_ / potential_grid_gap_ * pos.y) + (potential_grid_gap_ / 2);
-  int grid_width_index =
-      (width_ / potential_grid_gap_ * pos.x) + (potential_grid_gap_ / 2);
-  return potential_grid_[grid_height_index][grid_width_index];
+  int grid_x = (pos.x + potential_grid_gap_ / 2) / potential_grid_gap_;
+  int grid_y = (pos.y + potential_grid_gap_ / 2) / potential_grid_gap_;
+  return potential_grid_[grid_x][grid_y];
 }
 Vector<field_t> Diode::GetElectricityField(Vector<dist_t> pos) const {
   Vector<dist_t> delta_x = {potential_grid_gap_, 0};
