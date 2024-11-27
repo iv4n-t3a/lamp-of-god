@@ -18,12 +18,24 @@ Diode::Diode(dist_t width, dist_t height, dist_t cathode_width,
       cathode_potential_(voltage),
       cond_(conductor),
       potential_grid_gap_(potential_grid_gap),
-      electrons_per_charge_(electrons_per_charge) {}
+      electrons_per_charge_(electrons_per_charge)
+{
+  size_t grid_width = width_ / potential_grid_gap_;
+  size_t grid_height = height_ / potential_grid_gap_;
 
-Vector<field_t> Diode::GetPotential(Vector<dist_t> pos) const {
-  // TODO implement with poison
-  std::ignore = pos;
-  return {0, 0};
+  potential_grid_ = std::vector(grid_height, std::vector<potential_t>(grid_width));
+
+  for (size_t i = 0; i < grid_height; i++) {
+    potential_grid_[i][0] = cathode_potential_ / grid_width;
+  }
+
+  SolvePoisson<potential_t>(potential_grid_, std::vector(grid_height, std::vector<bool>(grid_width, false)));
+}
+
+potential_t Diode::GetPotential(Vector<dist_t> pos) const {
+  int grid_height_index = (height_ / potential_grid_gap_ * pos.y) + (potential_grid_gap_ / 2);
+  int grid_width_index = (width_ / potential_grid_gap_ * pos.x) + (potential_grid_gap_ / 2);
+  return potential_grid_[grid_height_index][grid_width_index];
 }
 
 void Diode::NewFrameSetup(delay_t delta_time) {

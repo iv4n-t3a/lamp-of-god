@@ -26,8 +26,5 @@ int main() {
 
   for (size_t i = 0; i < kIterations; ++i) {
     tube.NewFrame(kDeltaTime);
-    std::cout << tube.GetPotential({0, kHeight / 2}).x << ' '
-              << tube.GetPotential({0, kHeight / 2}).y << ' '
-              << tube.CountCharges() << '\n';
   }
 }
