@@ -8,9 +8,9 @@
 #include "phys.hpp"
 
 Diode::Diode(dist_t width, dist_t height, dist_t cathode_area, temp_t temp,
-             Conductor conductor, dist_t potential_grid_gap,
-             physical_t electrons_per_charge)
-    : Tube(temp, width, height),
+             potential_t cathode_potential, Conductor conductor,
+             dist_t potential_grid_gap, physical_t electrons_per_charge)
+    : Tube(temp, width, height, cathode_potential),
       cathode_area_(cathode_area),
       cond_(conductor),
       potential_grid_gap_(potential_grid_gap),
@@ -22,7 +22,7 @@ Diode::Diode(dist_t width, dist_t height, dist_t cathode_area, temp_t temp,
       std::vector(grid_height, std::vector<potential_t>(grid_width));
 
   for (size_t i = 0; i < grid_height; i++) {
-    potential_grid_[i][0] = cathode_potential_ / grid_width;
+    potential_grid_[i][0] = cathode_potential_ / grid_height;
   }
 
   SolvePoisson<potential_t>(

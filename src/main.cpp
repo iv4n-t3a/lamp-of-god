@@ -7,7 +7,7 @@
 const dist_t kWidth = 0.03;
 const dist_t kHeight = 0.01;
 const dist_t kCathodeArea = 0.01 * 0.01;
-const current_t kVoltage = 100;
+const current_t kVoltage = -10;
 const temp_t kTemp = 2200;
 
 const delay_t kIterations = 100;
@@ -26,10 +26,8 @@ const std::pair<size_t, size_t> kHeatmapResolution = {kWidth * kHeatmapScale,
 int main() {
   std::cout << "Solving Poisson..." << std::endl;
 
-  Diode tube(kWidth, kHeight, kCathodeArea, kTemp, kTungsten, kPotentialGridGap,
+  Diode tube(kWidth, kHeight, kCathodeArea, kTemp, kVoltage, kTungsten, kPotentialGridGap,
              kElectronPerCharge);
-
-  tube.SetCathodePotential(kVoltage);
 
   std::cout << "OK" << std::endl;
 
@@ -40,6 +38,7 @@ int main() {
 
   for (size_t i = 0; i < kIterations; ++i) {
     tube.NewFrame(kDeltaTime);
+    std::cout << tube.GetCurrent() << std::endl;
   }
 
   std::cout << "OK" << std::endl;

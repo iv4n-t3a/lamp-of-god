@@ -10,14 +10,15 @@ class TubeObserver;
 
 class Tube {
  public:
-  Tube(temp_t temp, dist_t width, dist_t height)
-      : temp_(temp), width_(width), height_(height) {}
+  Tube(temp_t temp, dist_t width, dist_t height, potential_t cathode_potential)
+      : temp_(temp),
+        width_(width),
+        height_(height),
+        cathode_potential_(cathode_potential) {}
 
   void AddObserver(TubeObserver* obs);
   void NewFrame(delay_t delta_time);
 
-  void SetCathodePotential(potential_t pot) { cathode_potential_ = pot; }
-  void SetAnodePotential(potential_t pot) { anode_potential_ = pot; }
   void SetWarmerTemperature(temp_t temp) { temp_ = temp; }
 
   std::pair<dist_t, dist_t> GetDimensions() const {
@@ -37,7 +38,6 @@ class Tube {
   dist_t width_;
   dist_t height_;
   potential_t cathode_potential_ = 0;
-  potential_t anode_potential_ = 0;
 
  private:
   std::vector<TubeObserver*> observers_;
