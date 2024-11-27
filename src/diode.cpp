@@ -18,12 +18,36 @@ Diode::Diode(dist_t width, dist_t height, dist_t cathode_width,
       cathode_potential_(voltage),
       cond_(conductor),
       potential_grid_gap_(potential_grid_gap),
-      electrons_per_charge_(electrons_per_charge) {}
+      electrons_per_charge_(electrons_per_charge) {
+  size_t grid_width = width_ / potential_grid_gap_;
+  size_t grid_height = height_ / potential_grid_gap_;
 
-Vector<field_t> Diode::GetPotential(Vector<dist_t> pos) const {
-  // TODO implement with poison
-  std::ignore = pos;
-  return {0, 0};
+  potential_grid_ =
+      std::vector(grid_height, std::vector<potential_t>(grid_width));
+
+  for (size_t i = 0; i < grid_height; i++) {
+    potential_grid_[i][0] = cathode_potential_ / grid_width;
+  }
+
+  SolvePoisson<potential_t>(
+      potential_grid_,
+      std::vector(grid_height, std::vector<bool>(grid_width, false)));
+}
+
+potential_t Diode::GetPotential(Vector<dist_t> pos) const {
+  int grid_x = (pos.x + potential_grid_gap_ / 2) / potential_grid_gap_;
+  int grid_y = (pos.y + potential_grid_gap_ / 2) / potential_grid_gap_;
+  return potential_grid_[grid_x][grid_y];
+}
+Vector<field_t> Diode::GetElectricityField(Vector<dist_t> pos) const {
+  Vector<dist_t> delta_x = {potential_grid_gap_, 0};
+  Vector<dist_t> delta_y = {0, potential_grid_gap_};
+  field_t field_x =
+      (GetPotential(pos) - GetPotential(pos + delta_x)) / potential_grid_gap_;
+  field_t field_y =
+      (GetPotential(pos) - GetPotential(pos + delta_y)) / potential_grid_gap_;
+
+  return {field_x, field_y};
 }
 
 void Diode::NewFrameSetup(delay_t delta_time) {
@@ -67,22 +91,21 @@ void Diode::ApplyElectricForce(delay_t delta_time) {
   for (size_t i = 0; i < CountCharges(); ++i) {
     ApplyElectricForceToCharge(delta_time, i);
   }
-  for (size_t i = 0; i < CountCharges(); ++i) {
-    charges_[i].position += charges_[i].velocity * delta_time;
-  }
 }
 
 void Diode::ApplyElectricForceToCharge(delay_t delta_time, size_t idx) {
   std::ignore = delta_time;
 
   const physical_t kCharge = electrons_per_charge_ * kElementaryCharge;
-  const physical_t kChargeMass = electrons_per_charge_ * kElectronMass;
+  const physical_t kMass = electrons_per_charge_ * kElectronMass;
 
-  Vector<dist_t> pos = charges_[idx].position;
-  Vector<work_t> energy = GetPotential(pos) * kCharge;
-  Vector<vel_t> velocity_sqr = energy * 2 / kChargeMass;
-  charges_[idx].velocity =
-      velocity_sqr.Normalized() * pow(velocity_sqr.SqrLen(), 1. / 2);
+  auto pos = charges_[idx].position;
+  auto vel = charges_[idx].velocity;
+  Vector<force_t> force = GetElectricityField(pos) * kCharge;
+  Vector<accel_t> accel = force / kMass;
+  charges_[idx].velocity += accel * delta_time;
+  charges_[idx].position +=
+      vel * delta_time + accel * delta_time * delta_time / 2;
 }
 
 bool Diode::IsInsideTube(size_t idx) {

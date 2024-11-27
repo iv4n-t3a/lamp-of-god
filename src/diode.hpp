@@ -15,7 +15,8 @@ class Diode : public Tube {
         temp_t temp, voltage_t voltage, Conductor conductor,
         dist_t potential_grid_gap, physical_t electrons_per_charge);
 
-  Vector<potential_t> GetPotential(Vector<dist_t> pos) const override;
+  potential_t GetPotential(Vector<dist_t> pos) const override;
+  Vector<field_t> GetElectricityField(Vector<dist_t> pos) const override;
 
   size_t CountCharges() const { return charges_.size(); }
 
@@ -38,6 +39,7 @@ class Diode : public Tube {
 
   dist_t potential_grid_gap_;
   physical_t electrons_per_charge_ = 1;
+  std::vector<std::vector<potential_t>> potential_grid_;
 
   physical_t new_charges_ = 0;
   std::vector<Charge> charges_;
