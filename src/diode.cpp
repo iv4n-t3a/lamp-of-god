@@ -37,12 +37,12 @@ void Diode::SpawnNewCharges(delay_t delta_time) {
   static std::uniform_real_distribution<> dis_x(0, cathode_width_);
   static std::uniform_real_distribution<> dis_y(0, height_);
 
-  new_charges +=
+  new_charges_ +=
       CalcNewCharge(temp_, cond_, delta_time, cathode_width_ * height_) /
       kElementaryCharge / electrons_per_charge_;
 
-  double new_charges_int_part = std::floor(new_charges);
-  new_charges -= new_charges_int_part;
+  double new_charges_int_part = std::floor(new_charges_);
+  new_charges_ -= new_charges_int_part;
 
   for (size_t i = 0; i < new_charges_int_part; ++i) {
     dist_t x = dis_x(gen);
