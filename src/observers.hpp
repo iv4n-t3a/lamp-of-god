@@ -36,5 +36,5 @@ class AveragePotentialObserver : public TubeObserver {
   int iterations_count_ = 0;
   int width_;
   int height_;
-  std::vector<std::vector<Vector<potential_t>>> potentials_;
+  std::vector<std::vector<potential_t>> potentials_;
 };
