@@ -65,5 +65,6 @@ inline Vector<potential_t> CountPotential(
 }
 
 inline Vector<potential_t> CountElectronsPotential(Vector<vel_t> velocity) {
-  return velocity.Normalized() * velocity.SqrLen() * kElectronMass / 2 / kElementaryCharge;
+  return velocity.Normalized() * velocity.SqrLen() * kElectronMass / 2 /
+         kElementaryCharge;
 }
