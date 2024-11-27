@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
+import sys
 
-FILE_PATH = "/home/ivan/codes/lamp-of-god/data/file.txt"
+FILE_PATH = sys.argv[1]
 
 def read_file_content():
     global FILE_PATH

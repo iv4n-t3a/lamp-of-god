@@ -22,7 +22,7 @@ Diode::Diode(dist_t width, dist_t height, dist_t cathode_area, temp_t temp,
       std::vector(grid_height, std::vector<potential_t>(grid_width));
 
   for (size_t i = 0; i < grid_height; i++) {
-    potential_grid_[i][0] = cathode_potential_ / grid_height;
+    potential_grid_[i][0] = cathode_potential_;
   }
 
   SolvePoisson<potential_t>(
