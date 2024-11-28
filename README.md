@@ -6,7 +6,7 @@ physics vacum tube simulation
 
 ## Pictures
 
-![cvc](media/cvc.png)
+![cvc](media/cvc.jpg)
 
 Current–voltage characteristic
 

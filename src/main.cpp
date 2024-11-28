@@ -24,7 +24,7 @@ const double kHeatmapScale = 10000;
 const std::pair<size_t, size_t> kHeatmapResolution = {kWidth * kHeatmapScale,
                                                       kHeight* kHeatmapScale};
 
-const double kCVCMinVoltage = 0.002;
+const double kCVCMinVoltage = -0.5;
 const double kCVCMaxVoltage = 0.5;
 const double kCVCStep = 0.01;
 const size_t kCVCIterations = 10;

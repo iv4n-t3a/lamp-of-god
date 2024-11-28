@@ -22,13 +22,17 @@ def read_file_content():
 def build_plot():
     x_dots, y_dots = read_file_content()
 
+    X_OFFSET = abs(x_dots[0] - x_dots[-1]) / 10
+    Y_OFFSET = abs(y_dots[0] - y_dots[-1]) / 10
+
+
     plt.title('Current–voltage characteristic')
     plt.xlabel('Voltage(Volts)')
     plt.ylabel('Current(Amperes)')
 
     plt.plot(x_dots, y_dots)
-    plt.xlim(x_dots[0], x_dots[-1])
-    plt.ylim(y_dots[0], y_dots[-1])
+    plt.xlim(x_dots[0] - X_OFFSET, x_dots[-1] + X_OFFSET)
+    plt.ylim(y_dots[0] - Y_OFFSET, y_dots[-1] + Y_OFFSET)
     plt.show()
 
 if __name__ == "__main__":
