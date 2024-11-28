@@ -92,7 +92,6 @@ void AveragePotentialObserver::NewFrame(delay_t delta_time) {
 }
 
 AveragePotentialObserver::~AveragePotentialObserver() {
-  std::cout << kFilePath << std::endl;
   std::ofstream output_file(kFilePath);
   for (size_t i = 0; i < potentials_.size(); i++) {
     for (size_t j = 0; j < potentials_[i].size(); j++) {
